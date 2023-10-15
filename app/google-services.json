@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "104035423055",
+    "project_id": "fateczap",
+    "storage_bucket": "fateczap.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:104035423055:android:f4145cd4ad5cff50796b3a",
+        "android_client_info": {
+          "package_name": "com.volpe.fateczap"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCWTtc1QueOvwUtbDf35mN864q6p5C0sCY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
