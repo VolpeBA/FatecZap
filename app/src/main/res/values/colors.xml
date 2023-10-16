@@ -4,4 +4,5 @@
     <color name="white">#FFFFFFFF</color>
     <color name="primaria">#0F8068</color>
     <color name="destaque">#16A984</color>
+    <color name="cinza">#444444</color>
 </resources>

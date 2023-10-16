@@ -60,7 +60,7 @@ class LoginActivity : AppCompatActivity() {
         firebaseAuth.signInWithEmailAndPassword(
             email, senha
         ).addOnSuccessListener {
-            exibirMensagem("teste 123")
+            exibirMensagem("Logado com sucesso")
             startActivity(
                 Intent(applicationContext, MainActivity::class.java)
             )
