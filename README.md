@@ -1,7 +1,5 @@
-# Projeto em desenvolvimento!
-
 # FatecZap
-- Projeto desenvolvido com o objetivo de conclusão da matéria de "Programação para dispositivos móveis" no curso de Análise e desenvolvimento de sistemas e para portfólio pessoal.  
+- Projeto desenvolvido com o objetivo de conclusão da matéria de "Programação para dispositivos móveis" no curso de Análise e desenvolvimento de sistemas e para portfólio pessoal. (Projeto em desenvolvimento)
 
 # Linguagem e Banco de dados
 - Kotlin, Java e Firebase
