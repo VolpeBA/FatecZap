@@ -6,3 +6,9 @@
 
 # IDE
 - Android Studio
+
+# Demonstração
+<div align="center">
+<image src="https://github.com/VolpeBA/FatecZap/assets/53006149/08e22eaa-5012-4dee-a331-8f670cd95781" width="320px" center>
+
+</div>
