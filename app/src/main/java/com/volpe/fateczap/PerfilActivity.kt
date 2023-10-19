@@ -1,6 +1,7 @@
 package com.volpe.fateczap
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
@@ -8,6 +9,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.volpe.fateczap.databinding.ActivityPerfilBinding
 import com.volpe.fateczap.utils.exibirMensagem
@@ -40,6 +42,10 @@ class PerfilActivity : AppCompatActivity() {
         FirebaseStorage.getInstance()
     }
 
+    private val firestore by lazy {
+        FirebaseFirestore.getInstance()
+    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,8 +56,44 @@ class PerfilActivity : AppCompatActivity() {
     }
 
     private fun uploadImagemStorage(uri: Uri) {
-
+        val idUsuario = firebaseAuth.currentUser?.uid
+        if ( idUsuario != null){
+            storage
+                .getReference("fotos")
+                .child("usuarios")
+                .child(idUsuario)
+                .child("perfil.jpg")
+                .putFile( uri )
+                .addOnSuccessListener {task ->
+                    task.metadata
+                        ?.reference
+                        ?.downloadUrl
+                        ?.addOnSuccessListener { url ->
+                            val dados = mapOf(
+                                "foto" to url.toString()
+                            )
+                            atualizarDadosPerfil( idUsuario, dados )
+                        }
+                }.addOnFailureListener{
+                    exibirMensagem("Falha ao enviar a imagem, tente novamente")
+                }
+        }
     }
+
+    private fun atualizarDadosPerfil(idUsuario: String, dados: Map<String, String>) {
+        firestore
+            .collection("usuarios" )
+            .document( idUsuario )
+            .update( dados )
+            .addOnSuccessListener {
+                //exibirMensagem("Sucesso ao atualizar o perfil")
+
+            }
+            .addOnFailureListener {
+                exibirMensagem("Erro ao atualizar perfil, tente novamente")
+            }
+    }
+
 
     private fun inicializarEventosClique() {
         binding.fabSelecionar.setOnClickListener{
@@ -60,6 +102,26 @@ class PerfilActivity : AppCompatActivity() {
             }else{
                 exibirMensagem("Não tem permissão para acessar galeria")
                 solicitarPermissoes()
+            }
+        }
+
+        binding.btnAtualizarPerfil.setOnClickListener{
+            val nomeUsuario = binding.editNomePerfil.text.toString()
+            if ( nomeUsuario.isNotEmpty()){
+                val idUsuario = firebaseAuth.currentUser?.uid
+                // Sempre que utilizar chamada segura ( currentUser?) deve se verificar se está nulo
+                if ( idUsuario != null ){
+                    val dados = mapOf(
+                        "nome" to nomeUsuario
+                    )
+                    atualizarDadosPerfil( idUsuario, dados )
+                    exibirMensagem("Perfil atualizado com sucesso")
+                    startActivity(
+                        Intent(applicationContext, MainActivity::class.java)
+                    )
+                }
+            }else{
+                exibirMensagem("Preencha o nome corretamente")
             }
         }
     }

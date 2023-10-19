@@ -56,7 +56,7 @@
             android:layout_height="wrap_content"
             android:hint="Digite sua senha"
             android:inputType="text|textPassword"
-            android:text="123456789" />
+            android:text="12345678" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <TextView

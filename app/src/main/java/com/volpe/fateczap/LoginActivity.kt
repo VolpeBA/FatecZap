@@ -75,6 +75,9 @@ class LoginActivity : AppCompatActivity() {
             }catch (erroCredenciaisInvalidas: FirebaseAuthInvalidCredentialsException){
                 erroCredenciaisInvalidas.printStackTrace()
                 exibirMensagem("E-mail ou senha estão incorretos")
+            }catch (e: Exception) {
+                e.printStackTrace()
+                exibirMensagem("Ocorreu um erro ao logar, tente novamente!")
             }
         }
     }
