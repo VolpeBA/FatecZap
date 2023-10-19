@@ -9,6 +9,7 @@ import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import com.volpe.fateczap.databinding.ActivityLoginBinding
 import com.volpe.fateczap.utils.exibirMensagem
 
+
 class LoginActivity : AppCompatActivity() {
     private val binding by lazy {
         ActivityLoginBinding.inflate( layoutInflater )
@@ -57,6 +58,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun logarUsuario() {
+
         firebaseAuth.signInWithEmailAndPassword(
             email, senha
         ).addOnSuccessListener {

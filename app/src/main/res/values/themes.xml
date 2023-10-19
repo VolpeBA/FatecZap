@@ -11,6 +11,7 @@
     <style name="ActionOverflowButton" parent="Widget.AppCompat.ActionButton.Overflow">
         <item name="tint">@color/white</item>
     </style>
+
     <style name="Theme.FatecZap" parent="Base.Theme.FatecZap" />
 
     <style name="Circulo">
