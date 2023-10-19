@@ -46,6 +46,8 @@ dependencies {
     implementation("com.google.firebase:firebase-auth-ktx") // Autenticador
     implementation("com.google.firebase:firebase-firestore-ktx") // Firestore firebase
     implementation("com.google.firebase:firebase-storage-ktx") // Storage Firebase
+    implementation("com.squareup.picasso:picasso:2.8") // Picasso, GitHub: https://github.com/square/picasso
+
 
     implementation("androidx.core:core-ktx:1.9.0")
     implementation("androidx.appcompat:appcompat:1.6.1")

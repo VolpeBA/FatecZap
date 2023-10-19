@@ -11,6 +11,7 @@ import androidx.core.content.ContextCompat
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
+import com.squareup.picasso.Picasso
 import com.volpe.fateczap.databinding.ActivityPerfilBinding
 import com.volpe.fateczap.utils.exibirMensagem
 
@@ -33,6 +34,7 @@ class PerfilActivity : AppCompatActivity() {
 
     private var temPermissaoCamera = false
     private var temPermissaoGaleria = false
+    private var idUsuario: String? = null
 
     private val firebaseAuth by lazy {
         FirebaseAuth.getInstance()
@@ -53,6 +55,38 @@ class PerfilActivity : AppCompatActivity() {
         inicializarToolbar()
         solicitarPermissoes()
         inicializarEventosClique()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        recuperarDadosIniciaisUsuario()
+    }
+
+    private fun recuperarDadosIniciaisUsuario() {
+        val idUsuario = firebaseAuth.currentUser?.uid
+        if ( idUsuario != null ){
+            firestore
+                .collection("usuarios")
+                .document( idUsuario )
+                .get()
+                .addOnSuccessListener { documentSnapshot ->
+                    var dadosUsuario = documentSnapshot.data
+
+                    if ( dadosUsuario != null ){
+
+                        val nome = dadosUsuario["nome"] as String
+                        val foto = dadosUsuario["foto"] as String
+
+                        binding.editNomePerfil.setText( nome )
+                        if ( foto.isNotEmpty() ){
+                            Picasso.get()
+                                .load( foto )
+                                .into( binding.imagePerfil )
+                        }
+                    }
+                }
+        }
+
     }
 
     private fun uploadImagemStorage(uri: Uri) {
