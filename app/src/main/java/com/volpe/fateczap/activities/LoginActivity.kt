@@ -1,4 +1,4 @@
-package com.volpe.fateczap
+package com.volpe.fateczap.activities
 
 import android.content.Intent
 import android.os.Bundle
@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthInvalidUserException
+import com.volpe.fateczap.R
 import com.volpe.fateczap.databinding.ActivityLoginBinding
 import com.volpe.fateczap.utils.exibirMensagem
 

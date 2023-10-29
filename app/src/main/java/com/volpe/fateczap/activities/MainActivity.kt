@@ -1,4 +1,4 @@
-package com.volpe.fateczap
+package com.volpe.fateczap.activities
 
 import android.content.Intent
 import android.os.Bundle
@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.MenuProvider
 import com.google.android.material.tabs.TabLayoutMediator
 import com.google.firebase.auth.FirebaseAuth
+import com.volpe.fateczap.R
 import com.volpe.fateczap.adapters.ViewPagerAdapter
 import com.volpe.fateczap.databinding.ActivityMainBinding
 
@@ -55,7 +56,7 @@ class MainActivity : AppCompatActivity() {
         addMenuProvider(
             object: MenuProvider{
                 override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-                    menuInflater.inflate( R.menu.menu_principal, menu )
+                    menuInflater.inflate(R.menu.menu_principal, menu )
                 }
 
                 override fun onMenuItemSelected(menuItem: MenuItem): Boolean {

@@ -1,4 +1,4 @@
-package com.volpe.fateczap
+package com.volpe.fateczap.activities
 
 import android.content.Intent
 import android.os.Bundle
