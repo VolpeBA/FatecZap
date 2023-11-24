@@ -3,12 +3,15 @@ package com.volpe.fateczap.activities
 import android.os.Build
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
 import com.google.firebase.firestore.Query
 import com.squareup.picasso.Picasso
+import com.volpe.fateczap.adapters.MensagensAdapter
 import com.volpe.fateczap.databinding.ActivityMensagensBinding
+import com.volpe.fateczap.models.Conversa
 import com.volpe.fateczap.models.Mensagem
 import com.volpe.fateczap.models.Usuario
 import com.volpe.fateczap.utils.Constantes
@@ -23,20 +26,32 @@ class MensagensActivity : AppCompatActivity() {
         FirebaseFirestore.getInstance()
     }
 
-    private lateinit var listenerRegistration: ListenerRegistration
+
 
     private val binding by lazy {
         ActivityMensagensBinding.inflate( layoutInflater )
     }
+    private lateinit var listenerRegistration: ListenerRegistration
     private var dadosDestinatario: Usuario? = null
+    private var dadosUsuarioRemetente: Usuario? = null
+    private lateinit var conversasAdapter: MensagensAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView( binding.root )
-        recuperarDadosUsuarioDestinatario()
+        recuperarDadosUsuarios()
         inicializarToolbar()
         inicializarEventosClique()
-        inicilizarListeners()
+        inicializarRecyclerView()
+        inicializarListeners()
+    }
+
+    private fun inicializarRecyclerView() {
+        with(binding){
+            conversasAdapter = MensagensAdapter()
+            rvMensagens.adapter = conversasAdapter
+            rvMensagens.layoutManager = LinearLayoutManager(applicationContext)
+        }
     }
 
     override fun onDestroy() {
@@ -44,7 +59,7 @@ class MensagensActivity : AppCompatActivity() {
         listenerRegistration.remove()
     }
 
-    private fun inicilizarListeners() {
+    private fun inicializarListeners() {
         val idUsuarioRemetente = firebaseAuth.currentUser?.uid
         val idUsuarioDestinatario = dadosDestinatario?.id
         if ( idUsuarioRemetente != null && idUsuarioDestinatario != null ){
@@ -72,6 +87,7 @@ class MensagensActivity : AppCompatActivity() {
                     //Lista
                     if ( listaMensagens.isNotEmpty() ){
                         //Carregar os dados Adapter
+                        conversasAdapter.adicionarLista( listaMensagens )
                     }
                 }
         }
@@ -99,16 +115,47 @@ class MensagensActivity : AppCompatActivity() {
                 salvarMensagemFirestore(
                     idUsuarioRemetente, idUsuarioDestinatario, mensagem
                 )
+                val conversaRemetente = Conversa(
+                    idUsuarioRemetente,
+                    idUsuarioDestinatario,
+                    dadosDestinatario!!.foto,
+                    dadosDestinatario!!.nome,
+                    textoMensagem
+                )
+
+                salvarConversaFirestore( conversaRemetente )
 
                 //Salvar para o destinatario
                 salvarMensagemFirestore(
                     idUsuarioDestinatario, idUsuarioRemetente, mensagem
                 )
+                val conversaDestinatario = Conversa(
+                    idUsuarioDestinatario,
+                    idUsuarioRemetente,
+                    dadosUsuarioRemetente!!.foto,
+                    dadosUsuarioRemetente!!.nome,
+                    textoMensagem
+                )
+
+                salvarConversaFirestore( conversaDestinatario )
 
                 binding.editMensagem.setText("")
             }
         }
 
+    }
+
+    private fun salvarConversaFirestore(conversa: Conversa) {
+
+        firestore
+            .collection(Constantes.CONVERSAS)
+            .document(conversa.idUsuarioRemetente)
+            .collection(Constantes.ULTIMAS_CONVERSAS)
+            .document(conversa.idUsuarioDestinatario)
+            .set(conversa)
+            .addOnFailureListener{
+                exibirMensagem("Erro ao salvar conversa")
+            }
     }
 
     private fun salvarMensagemFirestore( idUsuarioRemetente: String, idUsuarioDestinatario: String, mensagem: Mensagem ) {
@@ -139,7 +186,23 @@ class MensagensActivity : AppCompatActivity() {
         }
     }
 
-    private fun recuperarDadosUsuarioDestinatario() {
+    private fun recuperarDadosUsuarios() {
+        //dados do usuario logado
+        val idUsuarioRemetente = firebaseAuth.currentUser?.uid
+        if ( idUsuarioRemetente != null ){
+            firestore
+                .collection(Constantes.USUARIOS)
+                .document( idUsuarioRemetente )
+                .get()
+                .addOnSuccessListener { documentSnapshot ->
+                    val usuario = documentSnapshot.toObject(Usuario::class.java)
+                    if (usuario != null){
+                        dadosUsuarioRemetente = usuario
+                    }
+                }
+        }
+
+        //recuperando dados destinatario
         val extras = intent.extras
         if (extras != null){
             val origem = extras.getString("origem")
